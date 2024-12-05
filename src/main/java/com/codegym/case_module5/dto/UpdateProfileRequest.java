@@ -1,7 +1,8 @@
 package com.codegym.case_module5.dto;
 
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -11,17 +12,22 @@ public class UpdateProfileRequest {
     @Pattern(regexp = "^[a-zA-Z0-9 ]+$", message = "Tên hiển thị không được chứa ký tự đặc biệt.")
     private String displayName;
 
+    @NotNull(message = "Ngày sinh không được để trống.")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
-    @Pattern(regexp = "Male|Female|Other", message = "Giới tính chỉ được là Male, Female hoặc Other.")
+    @Pattern(regexp = "^(Male|Female|Other)$", message = "Giới tính chỉ được là Male, Female hoặc Other.")
     private String gender;
 
     @NotBlank(message = "Email không được để trống.")
     @Email(message = "Email không hợp lệ.")
     private String email;
 
+    @Pattern(regexp = "^[0-9]+$", message = "Số điện thoại chỉ được chứa chữ số.")
     @Size(max = 15, message = "Số điện thoại không được vượt quá 15 ký tự.")
     private String phone;
+
+    private MultipartFile avatar;
 
     // Getters và Setters
     public String getDisplayName() {
@@ -63,5 +69,12 @@ public class UpdateProfileRequest {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-}
 
+    public MultipartFile getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(MultipartFile avatar) {
+        this.avatar = avatar;
+    }
+}

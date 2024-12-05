@@ -5,9 +5,11 @@ import com.codegym.case_module5.dto.UpdateProfileRequest;
 import com.codegym.case_module5.model.User;
 import com.codegym.case_module5.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -48,22 +50,41 @@ public class UserService {
     }
 
     public User updateProfile(UpdateProfileRequest updateProfileRequest) {
-        // Lấy thông tin người dùng từ email
-        Optional<User> optionalUser = userRepository.findByEmail(updateProfileRequest.getEmail());
+        // Lấy email từ Security Context
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // Kiểm tra người dùng có tồn tại không
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         if (!optionalUser.isPresent()) {
-            throw new IllegalArgumentException("Người dùng không tồn tại.");
+            throw new UsernameNotFoundException("Người dùng không tồn tại.");
         }
 
         User user = optionalUser.get();
 
-        // Cập nhật thông tin
-        user.setDisplayName(updateProfileRequest.getDisplayName());
+        // Cập nhật thông tin cơ bản
+        if (updateProfileRequest.getDisplayName() != null && !updateProfileRequest.getDisplayName().isEmpty()) {
+            user.setDisplayName(updateProfileRequest.getDisplayName());
+        }
         user.setPhone(updateProfileRequest.getPhone());
         user.setDateOfBirth(updateProfileRequest.getDateOfBirth());
         user.setGender(updateProfileRequest.getGender());
 
+        // Xử lý file upload (nếu có)
+        MultipartFile avatar = updateProfileRequest.getAvatar();
+        if (avatar != null && !avatar.isEmpty()) {
+            try {
+                String filePath = "/uploads/" + avatar.getOriginalFilename();
+                avatar.transferTo(new java.io.File(filePath));
+                user.setAvatarPath(filePath); // Lưu đường dẫn ảnh vào cơ sở dữ liệu
+            } catch (Exception e) {
+                throw new RuntimeException("Lỗi khi lưu ảnh đại diện: " + e.getMessage());
+            }
+        }
+
         // Lưu vào cơ sở dữ liệu
         return userRepository.save(user);
     }
+
+
 }
 

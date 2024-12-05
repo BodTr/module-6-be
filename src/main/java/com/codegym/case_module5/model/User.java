@@ -30,4 +30,23 @@ public class User {
 
     @Lob // Để lưu ảnh avatar dưới dạng byte[]
     private byte[] avatar;
-}
+
+    private String avatarPath; // Đường dẫn ảnh đại diện
+
+    // Getters và Setters
+    public String getAvatarPath() {
+        return avatarPath;
+    }
+
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
+    }
+
+
+
+
+    }
+
+
+
+

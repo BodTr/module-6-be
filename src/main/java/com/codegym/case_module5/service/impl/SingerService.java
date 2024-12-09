@@ -36,12 +36,12 @@ public class SingerService implements ISingerService {
         singer.setName(name);
 
         if (!file.isEmpty()) {
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path filePath = Paths.get("uploads/" + fileName);
-            System.out.println("filePath: " + filePath);
-            Files.createDirectories(filePath.getParent());
-            Files.write(filePath, file.getBytes());
-            singer.setAvatarLinkString(fileName);
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename().replaceAll(" ", "_");
+            String filePath = "/uploads/" + fileName;
+            Path path = Paths.get(System.getProperty("user.dir") + filePath);
+            file.transferTo(path);
+            singer.setAvatarLinkString(filePath); // Đường dẫn đúng để hiển thị
+            singer.setAvatarLinkString(filePath);
         }
 
 

@@ -28,9 +28,6 @@ public class User {
     @Column(length = 6)
     private String gender;
 
-    @Lob // Để lưu ảnh avatar dưới dạng byte[]
-    private byte[] avatar;
-
     private String avatarPath; // Đường dẫn ảnh đại diện
 
     // Getters và Setters
@@ -41,12 +38,4 @@ public class User {
     public void setAvatarPath(String avatarPath) {
         this.avatarPath = avatarPath;
     }
-
-
-
-
-    }
-
-
-
-
+}

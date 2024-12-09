@@ -43,7 +43,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Cấu hình CORS
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Endpoint không cần xác thực
-                        .requestMatchers("/api/user/update-profile").hasRole("USER") // Yêu cầu ROLE_USER
+                        .requestMatchers("/api/user/update-profile").hasRole("USER")
+                        .requestMatchers("/api/uploads/**").permitAll()// Yêu cầu ROLE_USER
                         .anyRequest().authenticated() // Các endpoint khác yêu cầu xác thực
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

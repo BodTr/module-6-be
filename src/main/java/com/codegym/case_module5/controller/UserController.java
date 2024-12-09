@@ -4,6 +4,7 @@ import com.codegym.case_module5.dto.RegisterRequest;
 import com.codegym.case_module5.dto.UpdateProfileRequest;
 import com.codegym.case_module5.model.User;
 import com.codegym.case_module5.service.UserService;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/user")
@@ -45,6 +51,16 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
+        if (user.getDateOfBirth() == null) {
+            user.setDateOfBirth(LocalDate.now()); // Gán giá trị mặc định nếu null
+        }
+
+        // Kiểm tra nếu user không có avatar, gán avatar mặc định
+        if (user.getAvatarPath() != null && !user.getAvatarPath().isEmpty()) {
+            user.setAvatarPath("/api/uploads/" + Paths.get(user.getAvatarPath()).getFileName().toString());
+        } else {
+            user.setAvatarPath("/uploads/default-avatar.png"); // Avatar mặc định
+        }
         return ResponseEntity.ok(user);
     }
 
@@ -55,11 +71,25 @@ public class UserController {
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(result.getAllErrors());
         }
+        // Xử lý file avatar
+        String avatarUrl = null;
         if (updateRequest.getAvatar() != null && !updateRequest.getAvatar().isEmpty()) {
-            System.out.println("Avatar file: " + updateRequest.getAvatar().getOriginalFilename());
+            try {
+                // Lưu file vào thư mục "uploads/" trong thư mục root của dự án
+                String fileName = System.currentTimeMillis() + "_" + updateRequest.getAvatar().getOriginalFilename();
+                Path filePath = Paths.get("uploads/" + fileName);
+                Files.createDirectories(filePath.getParent()); // Tạo thư mục nếu chưa có
+                Files.copy(updateRequest.getAvatar().getInputStream(), filePath);
+                avatarUrl = "/uploads/" + fileName;
+                System.out.println("Avatar đã được lưu tại: " + avatarUrl);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi lưu avatar.");
+            }
         } else {
-            System.out.println("Không có file avatar được gửi lên");
+            System.out.println("Không có file avatar được gửi lên.");
         }
+
 
         // Xử lý các trường khác
         System.out.println("Tên hiển thị: " + updateRequest.getDisplayName());

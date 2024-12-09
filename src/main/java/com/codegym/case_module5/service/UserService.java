@@ -11,6 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 @Service
@@ -73,9 +77,11 @@ public class UserService {
         MultipartFile avatar = updateProfileRequest.getAvatar();
         if (avatar != null && !avatar.isEmpty()) {
             try {
-                String filePath = "/uploads/" + avatar.getOriginalFilename();
-                avatar.transferTo(new java.io.File(filePath));
-                user.setAvatarPath(filePath); // Lưu đường dẫn ảnh vào cơ sở dữ liệu
+                String fileName = System.currentTimeMillis() + "_" + avatar.getOriginalFilename().replaceAll(" ", "_");
+                String filePath = "/uploads/" + fileName;
+                Path path = Paths.get(System.getProperty("user.dir") + filePath);
+                avatar.transferTo(path);
+                user.setAvatarPath(filePath); // Đường dẫn đúng để hiển thị
             } catch (Exception e) {
                 throw new RuntimeException("Lỗi khi lưu ảnh đại diện: " + e.getMessage());
             }

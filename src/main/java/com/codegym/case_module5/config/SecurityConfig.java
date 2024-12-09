@@ -44,7 +44,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Endpoint không cần xác thực
                         .requestMatchers("/api/user/update-profile").hasRole("USER")
-                        .requestMatchers("/api/uploads/**").permitAll()// Yêu cầu ROLE_USER
+                        .requestMatchers("/api/uploads/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
+                        // Yêu cầu ROLE_USER
                         .anyRequest().authenticated() // Các endpoint khác yêu cầu xác thực
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

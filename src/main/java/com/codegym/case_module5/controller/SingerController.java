@@ -28,4 +28,6 @@ public class SingerController {
         singerService.saveSinger(name, singerAvatar);
     }
 
+
+
 }

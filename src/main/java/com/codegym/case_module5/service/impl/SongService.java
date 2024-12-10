@@ -43,19 +43,51 @@ public class SongService implements ISongService {
         song.setSingers(singers);
 
         if (!file.isEmpty()) {
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path filePath = Paths.get("uploads/" + fileName);
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename().replaceAll(" ", "_");
+            String relativefilePath = "/uploads/" + fileName;
+            Path filePath = Paths.get(System.getProperty("user.dir") + relativefilePath);
             System.out.println("filePath: " + filePath);
-            Files.createDirectories(filePath.getParent());
-            Files.write(filePath, file.getBytes());
-            song.setSongStringLink(fileName);
+            file.transferTo(filePath);
+            song.setSongStringLink(relativefilePath);
         }
         this.save(song);
     }
 
+
+
     @Override
     public Optional<Song> findById(Long id) {
         return songRepository.findById(id);
+    }
+
+    public void updateSong(Long id, String title, String description, List<Long> singerIds, MultipartFile file) throws IOException {
+        String relativefilePath;
+        if (!file.isEmpty()) {
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename().replaceAll(" ", "_");
+            relativefilePath = "/uploads/" + fileName;
+            Path filePath = Paths.get(System.getProperty("user.dir") + relativefilePath);
+            System.out.println("filePath: " + filePath);
+            file.transferTo(filePath);
+
+        } else {
+            relativefilePath = "";
+        }
+
+        Optional<Song> song = songRepository.findById(id);
+        if (song.isPresent()) {
+            song.map(s -> {
+                s.setTitle(title);
+                s.setDescription(description);
+                Set<Singer> singers = new HashSet<>(singerRepository.findAllById(singerIds));
+                s.setSingers(singers);
+                s.setSongStringLink(relativefilePath);
+                return songRepository.save(s);
+            });
+        } else {
+            System.out.println("song not found");
+            throw new NullPointerException("song not found");
+
+        }
     }
 
     @Override

@@ -41,7 +41,7 @@ public class SingerService implements ISingerService {
             Path path = Paths.get(System.getProperty("user.dir") + filePath);
             file.transferTo(path);
             singer.setAvatarLinkString(filePath); // Đường dẫn đúng để hiển thị
-            singer.setAvatarLinkString(filePath);
+
         }
 
 

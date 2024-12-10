@@ -29,5 +29,9 @@ public class SongController {
         songService.saveSong(title, description, singerIds, songFile);
     }
 
-
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateSong(@PathVariable Long id, @RequestParam String title, @RequestParam String description, @RequestParam List<Long> singerIds, @RequestParam("songFileEdit") MultipartFile songFile) throws IOException {
+        songService.updateSong(id, title, description, singerIds, songFile);
+    }
 }

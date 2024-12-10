@@ -2,6 +2,8 @@ package com.codegym.case_module5.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import javax.management.relation.Role;
 import java.time.LocalDate;
 
 @Entity
@@ -29,6 +31,8 @@ public class User {
     private String gender;
 
     private String avatarPath; // Đường dẫn ảnh đại diện
+
+
 
     // Getters và Setters
     public String getAvatarPath() {

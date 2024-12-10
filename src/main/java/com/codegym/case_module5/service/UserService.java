@@ -98,6 +98,27 @@ public class UserService {
         return userRepository.findAll(pageable);
     }
 
+    // Thay đổi mật khẩu của người dùng
+    public void changePassword(String email, String currentPassword, String newPassword) {
+        User user = userRepository.findByEmail(email).orElseThrow(() ->
+                new IllegalArgumentException("Người dùng không tồn tại.")
+        );
+
+        // Kiểm tra mật khẩu hiện tại
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Mật khẩu hiện tại không chính xác.");
+        }
+
+        // Kiểm tra nếu mật khẩu mới trùng với mật khẩu cũ
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Mật khẩu mới không được trùng với mật khẩu cũ.");
+        }
+
+        // Mã hóa mật khẩu mới và lưu vào cơ sở dữ liệu
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
 
 }
 

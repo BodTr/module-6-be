@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
@@ -113,6 +114,36 @@ public class UserController {
             @RequestParam(defaultValue = "10") int size) {
         Page<User> users = userService.getAllUsers(PageRequest.of(page, size));
         return ResponseEntity.ok(users);
+    }
+
+    // Thay đổi mật khẩu
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> passwordData, Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Người dùng chưa đăng nhập.");
+        }
+
+        String email = principal.getName();
+        String currentPassword = passwordData.get("currentPassword");
+        String newPassword = passwordData.get("newPassword");
+        String confirmPassword = passwordData.get("confirmPassword");
+
+        if (newPassword == null || newPassword.length() < 6 || newPassword.length() > 32) {
+            return ResponseEntity.badRequest().body("Mật khẩu mới phải có độ dài từ 6-32 ký tự.");
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            return ResponseEntity.badRequest().body("Mật khẩu mới và nhập lại mật khẩu không khớp.");
+        }
+
+        try {
+            userService.changePassword(email, currentPassword, newPassword);
+            return ResponseEntity.ok("Đổi mật khẩu thành công.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Có lỗi xảy ra, vui lòng thử lại.");
+        }
     }
 
 

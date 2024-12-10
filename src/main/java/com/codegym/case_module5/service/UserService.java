@@ -5,6 +5,8 @@ import com.codegym.case_module5.dto.UpdateProfileRequest;
 import com.codegym.case_module5.model.User;
 import com.codegym.case_module5.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -89,6 +91,11 @@ public class UserService {
 
         // Lưu vào cơ sở dữ liệu
         return userRepository.save(user);
+    }
+
+    // Lấy danh sách người dùng có phân trang
+    public Page<User> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
 

@@ -1,5 +1,6 @@
 package com.codegym.music_project.service.impl;
 
+import com.codegym.music_project.dto.SingerDTO;
 import com.codegym.music_project.model.Singer;
 import com.codegym.music_project.repository.ISingerRepository;
 import com.codegym.music_project.service.interfaces_service.ISingerService;
@@ -10,8 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class SingerService implements ISingerService {
@@ -19,8 +22,17 @@ public class SingerService implements ISingerService {
     private ISingerRepository singerRepository;
 
     @Override
-    public Iterable<Singer> findAll() {
+    public List<Singer> findAll() {
         return singerRepository.findAll();
+    }
+
+    public List<SingerDTO> findAllSinger() {
+        List<Singer> singers = this.findAll();
+        return singers.stream().map(singer -> new SingerDTO(
+                singer.getId(),
+                singer.getName(),
+                singer.getAvatarLinkString()
+        )).collect(Collectors.toList());
     }
 
     @Override

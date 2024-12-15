@@ -18,11 +18,11 @@ import java.nio.file.Paths;
 public class FileUpLoadTController {
     @GetMapping("/{filename:.+}")
     public ResponseEntity<Resource> fileUpLoad(@PathVariable String filename) throws MalformedURLException {
-        System.out.println("file name: "+ filename);
+//        System.out.println("file name: "+ filename);
         Path filePath = Paths.get(System.getProperty("user.dir") + "/uploads").resolve(filename);
-        System.out.println("file path: "+ filePath);
+//        System.out.println("file path: "+ filePath);
         Resource resource = new UrlResource(filePath.toUri());
-        System.out.println("file resource: "+ resource);
+//        System.out.println("file resource: "+ resource);
         if (resource.exists() || resource.isReadable()) {
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")

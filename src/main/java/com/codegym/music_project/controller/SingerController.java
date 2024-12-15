@@ -1,5 +1,6 @@
 package com.codegym.music_project.controller;
 
+import com.codegym.music_project.dto.SingerDTO;
 import com.codegym.music_project.model.Singer;
 import com.codegym.music_project.service.impl.SingerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -18,8 +20,8 @@ public class SingerController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Singer> getAllSingers() {
-        return singerService.findAll();
+    public List<SingerDTO> getAllSingers() {
+        return singerService.findAllSinger();
     }
 
     @PostMapping

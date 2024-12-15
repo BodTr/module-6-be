@@ -1,14 +1,17 @@
 package com.codegym.music_project.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "singers")
-@Data
 public class Singer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +21,7 @@ public class Singer {
 
     private String avatarLinkString;
 
-    @ManyToMany(mappedBy = "singers")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "singers")
 
     private Set<Song> songs = new HashSet<>();
 

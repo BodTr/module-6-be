@@ -11,8 +11,11 @@ import java.util.Arrays;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+
     @ExceptionHandler(IOException.class)
     public ResponseEntity<Object> IOExceptionHandler(IOException e) {
+        System.out.println("IOException error: " + e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
     @ExceptionHandler(BindException.class)

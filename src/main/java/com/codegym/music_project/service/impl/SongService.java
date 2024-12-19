@@ -54,7 +54,7 @@ public class SongService implements ISongService {
     }
 
     public void saveSong(String title, String description, List<Long> singerIds, MultipartFile file) throws IOException {
-        System.out.println("file" + file.getOriginalFilename() + " " + file.getContentType() + " " + file.getSize());
+        System.out.println("file" + file.getOriginalFilename() + " " + file.getContentType() + " " + file.getSize() + " ");
         Song song = new Song();
         song.setTitle(title);
         song.setDescription(description);
@@ -63,8 +63,14 @@ public class SongService implements ISongService {
         song.setSingers(singers);
 
         if (!file.isEmpty()) {
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename().replaceAll(" ", "_");
-            String relativefilePath = "/uploads/" + fileName;
+
+            String fileName;
+            if ("audio/mpeg".equals(file.getContentType())) {
+                fileName = UUID.randomUUID() + "_audio_" + Objects.requireNonNull(file.getOriginalFilename()).replace(" ", "_");
+            } else {
+                fileName = UUID.randomUUID() + "_" + Objects.requireNonNull(file.getOriginalFilename()).replace(" ", "_");
+            }
+            String  relativefilePath = "/uploads/" + fileName;
             Path filePath = Paths.get(System.getProperty("user.dir") + relativefilePath);
             System.out.println("filePath: " + filePath);
             file.transferTo(filePath);
@@ -72,8 +78,6 @@ public class SongService implements ISongService {
         }
         this.save(song);
     }
-
-
 
     public SongDTO findByIdDTO(Long id) {
         Song song = songRepository.findById(id).orElse(null);
@@ -92,7 +96,7 @@ public class SongService implements ISongService {
             relativefilePath = "";
         } else {
             if (!file.isEmpty()) {
-                String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename().replaceAll(" ", "_");
+                String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename().replace(" ", "_");
                 relativefilePath = "/uploads/" + fileName;
                 Path filePath = Paths.get(System.getProperty("user.dir") + relativefilePath);
                 System.out.println("filePath: " + filePath);

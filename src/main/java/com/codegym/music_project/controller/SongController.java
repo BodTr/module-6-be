@@ -42,4 +42,9 @@ public class SongController {
     public void updateSong(@PathVariable Long id, @RequestParam String title, @RequestParam String description, @RequestParam List<Long> singers, @RequestParam(value = "songFileEdit", required = false) MultipartFile songFile) throws IOException {
         songService.updateSong(id, title, description, singers, songFile);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteSong(@PathVariable Long id) throws IOException {
+        songService.remove(id);
+    }
 }

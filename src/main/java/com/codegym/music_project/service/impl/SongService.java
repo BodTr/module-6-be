@@ -44,8 +44,10 @@ public class SongService implements ISongService {
 
     public List<SongDTO> getAllSong() {
         List<Song> songs = this.findAll();
-        //        System.out.println("songs: " + songdtos.size());
-        return songs.stream().map(a -> conversionService.convert(a, SongDTO.class)).collect(Collectors.toList());
+        System.out.println("songs: " + songs.size());
+        List<SongDTO> songDTOs = songs.stream().map(a -> conversionService.convert(a, SongDTO.class)).collect(Collectors.toList());
+        System.out.println("songDTOs: " + songDTOs.size());
+        return songDTOs;
     }
 
     @Override

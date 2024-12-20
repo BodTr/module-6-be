@@ -31,15 +31,5 @@ public class User {
     private String gender;
 
     private String avatarPath; // Đường dẫn ảnh đại diện
-
-
-
-    // Getters và Setters
-    public String getAvatarPath() {
-        return avatarPath;
-    }
-
-    public void setAvatarPath(String avatarPath) {
-        this.avatarPath = avatarPath;
-    }
+    
 }

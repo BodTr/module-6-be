@@ -48,7 +48,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Sai mật khẩu.");
         }
 
-        String token = jwtUtil.generateToken(user.getEmail());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
 //        System.out.println("Generated Token: " + token);
         return ResponseEntity.ok(new LoginResponse(token, user.getDisplayName()));
     }

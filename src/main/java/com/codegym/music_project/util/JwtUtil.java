@@ -18,12 +18,13 @@ public class JwtUtil {
         this.jwtKeyProvider = jwtKeyProvider;
     }
 
-    List<String> defaultRoles = List.of("ROLE_USER");
+    List<String> roles;
 
-    public String generateToken(String email) {
+    public String generateToken(String email, String role) {
+        roles = List.of(role);
         return Jwts.builder()
                 .setSubject(email)
-                .claim("roles", defaultRoles) // Thêm roles vào JWT
+                .claim("roles", roles) // Thêm roles vào JWT
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(jwtKeyProvider.getSecretKey(), SignatureAlgorithm.HS256)

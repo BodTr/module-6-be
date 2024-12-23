@@ -8,5 +8,6 @@ public class RegisterRequest {
     private String displayName;
     private String phone;
     private String password;
+    private String role;
 }
 

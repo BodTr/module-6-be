@@ -20,6 +20,9 @@ public class User {
     @Column(nullable = false)
     private String displayName;
 
+    @Column(nullable = false)
+    private String role;
+
     private String phone;
 
     @Column(nullable = false)
@@ -31,5 +34,4 @@ public class User {
     private String gender;
 
     private String avatarPath; // Đường dẫn ảnh đại diện
-    
 }

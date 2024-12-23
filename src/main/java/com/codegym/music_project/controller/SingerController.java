@@ -1,7 +1,9 @@
 package com.codegym.music_project.controller;
 
 import com.codegym.music_project.dto.SingerDTO;
+import com.codegym.music_project.dto.SongBySingerDTO;
 import com.codegym.music_project.model.Singer;
+import com.codegym.music_project.model.Song;
 import com.codegym.music_project.service.impl.SingerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,12 @@ public class SingerController {
     @ResponseStatus(HttpStatus.OK)
     public List<SingerDTO> getAllSingers() {
         return singerService.findAllSinger();
+    }
+
+    @GetMapping("songs/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<SongBySingerDTO> getAllSongsBySingerId(@PathVariable Long id) {
+        return singerService.findAllSongBySingerId(id);
     }
 
     @PostMapping

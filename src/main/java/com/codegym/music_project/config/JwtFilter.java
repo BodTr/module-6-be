@@ -43,9 +43,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 List<String> roles = claims.get("roles", List.class);
 
                 // Đảm bảo luôn có ROLE_USER mặc định
-                if (roles == null || roles.isEmpty()) {
-                    roles = List.of("ROLE_USER");
-                }
+//                if (roles == null || roles.isEmpty()) {
+//                    roles = List.of("ROLE_USER");
+//                }
                 if (username != null) {
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                             username,

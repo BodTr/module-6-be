@@ -1,8 +1,11 @@
 package com.codegym.music_project.service.impl;
 
 import com.codegym.music_project.dto.SingerDTO;
+import com.codegym.music_project.dto.SongBySingerDTO;
 import com.codegym.music_project.model.Singer;
+import com.codegym.music_project.model.Song;
 import com.codegym.music_project.repository.ISingerRepository;
+import com.codegym.music_project.repository.ISongRepository;
 import com.codegym.music_project.service.interfaces_service.ISingerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,9 +24,17 @@ public class SingerService implements ISingerService {
     @Autowired
     private ISingerRepository singerRepository;
 
+    @Autowired
+    private ISongRepository songRepository;
+
     @Override
     public List<Singer> findAll() {
         return singerRepository.findAll();
+    }
+
+
+    public List<SongBySingerDTO> findAllSongBySingerId(Long singerId) {
+        return songRepository.findAllBySingerId(singerId);
     }
 
     public List<SingerDTO> findAllSinger() {
